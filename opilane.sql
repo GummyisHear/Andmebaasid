@@ -18,34 +18,10 @@ perenimi,
 synniaeg,
 stip,
 keskmine_hinne)
-VALUES(
-'Arrjom',
-'Poldsaat',
-'2000-12-12',
-1,
-4.5
-),
-(
-'Vadim',
-'Artemovich',
-'2000-12-12',
-1,
-4.5
-),
-(
-'Denis',
-'Vadimovich',
-'2000-12-12',
-1,
-4.5
-),
-(
-'Andrei',
-'Denisovich',
-'2000-12-12',
-1,
-4.5
-)
+VALUES('Artjom', 'Poldsaar', '2000-12-12', 1, 4.5),
+('Vadim', 'Artemovich', '2000-12-12', 1, 4.5),
+('Denis','Vadimovich','2000-12-12',1,4.5),
+('Andrei','Denisovich','2000-12-12',1,4.5)
 --tabeli kustutamine
 DROP DATABASE opilane;
 --drop table opilane
