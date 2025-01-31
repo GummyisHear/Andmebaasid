@@ -53,3 +53,77 @@ INSERT INTO keelevalik (valikudnimetus, opilaneId, Language) VALUES
 ('valik F', 4, 4),
 ('valik F', 5, 1),
 ('valik F', 5, 4);
+
+
+
+-- E-pood SQL päringud (XAMPP)
+
+
+
+CREATE DATABASE epoodPoldsaar;
+USE epoodPoldsaar;
+
+CREATE TABLE Category(
+idCategory int primary key AUTO_INCREMENT, 
+CategoryName varchar(25) UNIQUE
+);
+
+INSERT INTO Category(CategoryName) VALUES
+('jook'),
+('söök');
+
+ALTER TABLE Category ADD test int;
+
+ALTER TABLE Category DROP COLUMN test;
+
+CREATE TABLE Product(
+idProduct int primary key AUTO_INCREMENT,
+ProductName varchar(50) UNIQUE NOT NULL,
+idCategory int,
+FOREIGN KEY (idCategory) REFERENCES Category(idCategory),
+Price decimal(5,2)
+);
+
+INSERT INTO Product(ProductName, idCategory, Price) VALUES
+('Karastusjook Coca Cola 0,5l', 1, 1.25),
+('Banaan Cavendish 1kl, kg', 2, 1.29),
+('Tomatimahl Aura 1l', 1, 1.29),
+('Kanafileesink M&M 150g', 1, 1.85),
+('Apelsin Navel, 1kl Rimi kg', 2, 1.49);
+
+CREATE TABLE Sale(
+idSale int primary key AUTO_INCREMENT,
+idProduct int,
+FOREIGN KEY (idProduct) REFERENCES Product(idProduct),
+idCustomer int,
+Count int,
+DateOfSale date
+);
+
+CREATE TABLE Customer(
+idCustomer int primary key AUTO_INCREMENT,
+Name varchar(25),
+Contact Text
+);
+
+ALTER TABLE Sale ADD FOREIGN KEY (idCustomer) REFERENCES Customer(idCustomer);
+
+SELECT * FROM Product;
+SELECT * FROM Sale;
+SELECT * FROM Customer;
+
+INSERT INTO Customer(Name, Contact) VALUES
+('Artjom', '+372 11236712'),
+('Vadim337', '+372 5231712'),
+('ValentinKiller', '+372 5712392'),
+('Wandal226', 'Wandal Company OÜ'),
+('DogeFromHell1', '+7 172395942');
+
+INSERT INTO Sale(idProduct, idCustomer, Count, DateOfSale) VALUES
+(1, 1, 100, '2024-12-30'),
+(2, 1, 2, '2024-12-30'),
+(4, 4, 1, '2024-12-12'),
+(5, 4, 2, '2024-12-12'),
+(3, 2, 2, '2023-9-17');
+
+
