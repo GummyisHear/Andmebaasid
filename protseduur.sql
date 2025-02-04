@@ -78,3 +78,29 @@ EXEC linnaOtsing 'S';
 EXEC linnaOtsing 'P';
 
 
+--------------------------------------------------------------------------------------------------------------
+--Kasutame XAMPP / localhost
+
+CREATE DATABASE protseduurPoldsaar;
+
+CREATE TABLE linn(
+linnId int primary key AUTO_INCREMENT,
+linnNimi varchar(30),
+rahvaArv int
+);
+
+INSERT INTO linn(linnNimi, rahvaArv) VALUES
+('Tallinn', 437980),
+('Pärnu', 40228),
+('Narva', 53626);
+
+
+
+--kutse
+CALL lisaLinn('Tartu', 25095);
+
+
+
+
+
+
