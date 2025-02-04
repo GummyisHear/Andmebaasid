@@ -127,3 +127,36 @@ INSERT INTO Sale(idProduct, idCustomer, Count, DateOfSale) VALUES
 (3, 2, 2, '2023-9-17');
 
 
+-------------------------------------------------------------------------------------------------------------
+--Protseduurid
+
+--Lisa
+BEGIN
+INSERT INTO opilane(eesnimi,perenimi,synniaeg,stip,keskmine_hinne) VALUES
+(eesnimi2, perenimi2, synniaeg2, stip2, keskmine_hinne2);
+SELECT * FROM opilane;
+END
+
+--Kustuta
+BEGIN
+SELECT * FROM opilane;
+DELETE FROM opilane WHERE opilaneId = opId;
+SELECT * FROM opilane;
+END
+
+--Otsing
+BEGIN
+SELECT * FROM opilane WHERE eesnimi LIKE CONCAT(taht, '%');
+END
+
+--Uuendus
+BEGIN
+UPDATE opilane SET stip = stip2
+WHERE opilaneId=opId;
+SELECT * FROM opilane;
+END
+
+
+
+
+
