@@ -1,7 +1,7 @@
 --AB loomine
 Create database PoldsaarBaas;
 
-use PoldsaarBass;
+use PoldsaarBaas;
 CREATE TABLE opilane(
 opilaneId int primary key identity(1, 1), 
 eesnimi varchar(25) not null,
@@ -93,6 +93,65 @@ CREATE TABLE oppimine (
 );
 
 select * from oppimine
+
+------------------------------------------------------------------------------------------------------------------------
+--Protseduurid
+
+--protseduur, mis lisab uus opilane
+CREATE PROCEDURE lisaOpilane
+@nimi varchar(25),
+@perenimi varchar(25),
+@synniaeg date,
+@stip bit,
+@keskmineHinne decimal(2,1)
+AS
+BEGIN
+INSERT INTO opilane(eesnimi,perenimi,synniaeg,stip,keskmine_hinne) VALUES
+(@nimi, @perenimi, @synniaeg, @stip, @keskmineHinne);
+SELECT * FROM opilane;
+END;
+
+--kutse
+EXEC lisaOpilane 'Artjom', 'Poldsaar', '2025-12-12', 0, 2.5;
+
+--protseduur, mis kustutab opilane Id järgi
+CREATE PROCEDURE kustutaOpilane
+@opId int
+AS
+BEGIN
+SELECT * FROM opilane;
+DELETE FROM opilane WHERE opilaneId = @opId;
+SELECT * FROM opilane;
+END;
+
+--kutse
+EXEC kustutaOpilane 5;
+
+--Protseduur, mis otsib opilane esimese tähte järgi (eesnimi)
+CREATE PROCEDURE opilaneOtsing
+@taht char(1)
+AS
+BEGIN
+SELECT * FROM opilane WHERE eesnimi LIKE @taht + '%';
+END;
+
+--kutse
+EXEC opilaneOtsing 'A';
+
+--Protseduur, mis uuendab õpilaste stipendium id järgi
+CREATE PROCEDURE opilaneStipUuendus
+@opId int,
+@stip bit
+AS
+BEGIN
+UPDATE opilane SET stip = @stip
+WHERE opilaneId=@opId;
+SELECT * FROM opilane;
+END;
+
+--kutse
+EXEC opilaneStipUuendus 2, 0;
+
 
 
 
