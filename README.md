@@ -3,3 +3,7 @@
 
 # (kustutaLinn)
 <img src="https://github.com/user-attachments/assets/9d1a1c13-d381-4a2a-a54c-e46ed3962b00" width="800">
+
+# (linnaOtsing)
+<img src="https://github.com/user-attachments/assets/b42f681d-cbf6-4f87-95fc-c7ddaf766e37" width="800">
+
