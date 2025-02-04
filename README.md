@@ -7,3 +7,5 @@
 # (linnaOtsing)
 <img src="https://github.com/user-attachments/assets/b42f681d-cbf6-4f87-95fc-c7ddaf766e37" width="800">
 
+# (rahvaArvuUuendus)
+<img src="https://github.com/user-attachments/assets/711eacf4-141e-4c0d-98f7-e0e4e770bf46" width="800">
