@@ -9,3 +9,16 @@
 
 # (rahvaArvuUuendus)
 <img src="https://github.com/user-attachments/assets/711eacf4-141e-4c0d-98f7-e0e4e770bf46" width="800">
+
+# lisaOpilane
+<img src="https://github.com/user-attachments/assets/e6bf6cbe-3c51-4503-9ff1-0ba56cc960c0" width="800">
+
+# kustutaOpilane
+<img src="https://github.com/user-attachments/assets/62ab58c7-f4cf-4ec8-ad55-a757f0af5e03" width="800">
+
+# opilaneOtsing
+<img src="https://github.com/user-attachments/assets/a8c77a90-c2d1-4dc5-8c6a-bd9bacfeb767" width="800">
+
+# opilaneStipUuendus
+<img src="https://github.com/user-attachments/assets/faef7787-4d0f-4ddb-9fe5-d6b894bd85b9" width="800">
+
