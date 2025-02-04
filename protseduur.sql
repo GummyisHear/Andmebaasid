@@ -55,4 +55,26 @@ EXEC kustutaLinn 6;
 --protseduuri kustutamine
 DROP PROCEDURE kustutaLinn;
 
+EXEC lisaLinn 'Tartu3333', 93000;
+EXEC lisaLinn 'Viljandi', 1;
+EXEC lisaLinn 'Saaremaa', 9;
+
+--Protseduur, mis otsib linn esimese tähte järgi
+
+CREATE PROCEDURE linnaOtsing
+@taht char(1)
+AS
+BEGIN
+
+SELECT * FROM linn 
+WHERE linnNimi LIKE @taht + '%';
+--% - kõik teised tähed
+
+END;
+
+--kutse
+EXEC linnaOtsing 'T';
+EXEC linnaOtsing 'S';
+EXEC linnaOtsing 'P';
+
 
