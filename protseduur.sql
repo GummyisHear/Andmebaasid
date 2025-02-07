@@ -100,7 +100,101 @@ INSERT INTO linn(linnNimi, rahvaArv) VALUES
 CALL lisaLinn('Tartu', 25095);
 
 
+---------------------------------------------------------------------------------------------------------------
+--07.02
 
+-- uue veeru lisamine
+ALTER TABLE linn ADD test int;
+
+SELECT * FROM linn;
+
+-- veeru kustutamine
+ALTER TABLE linn DROP COLUMN test;
+
+CREATE PROCEDURE veeruLisaKustuta
+@valik varchar(20),
+@veerunimi varchar(20),
+@tyyp varchar(10) = null
+AS
+BEGIN
+
+DECLARE @sqltegevus AS varchar(max);
+SET @sqltegevus = case
+when @valik = 'add' then concat('ALTER TABLE linn ADD ', @veerunimi, ' ', @tyyp)
+when @valik = 'drop' then concat('ALTER TABLE linn DROP COLUMN ', @veerunimi)
+END;
+
+print @sqltegevus;
+
+BEGIN
+EXEC(@sqltegevus);
+END;
+
+END;
+
+--kutse
+EXEC veeruLisaKustuta @valik='add', @veerunimi='test3', @tyyp='int';
+EXEC veeruLisaKustuta @valik='drop', @veerunimi='test3';
+SELECT * FROM linn;
+
+-- protseduur 2
+CREATE PROCEDURE veeruLisaKustutaTabelis
+@valik varchar(20),
+@tabelinimi varchar(20),
+@veerunimi varchar(20),
+@tyyp varchar(10) = null
+AS
+BEGIN
+
+DECLARE @sqltegevus AS varchar(max);
+SET @sqltegevus = case
+when @valik = 'add' then concat('ALTER TABLE ', @tabelinimi, ' ADD ', @veerunimi, ' ', @tyyp)
+when @valik = 'drop' then concat('ALTER TABLE ', @tabelinimi, ' DROP COLUMN ', @veerunimi)
+END;
+
+print @sqltegevus;
+
+BEGIN
+EXEC(@sqltegevus);
+END;
+
+END;
+
+--kutse
+EXEC veeruLisaKustutaTabelis @valik='add', @tabelinimi='linn', @veerunimi='test3', @tyyp='int';
+EXEC veeruLisaKustutaTabelis @valik='drop', @tabelinimi='linn', @veerunimi='test3';
+SELECT * FROM linn;
+
+--protseduur tingimusega
+CREATE PROCEDURE rahvaHinnang
+@piir int
+AS
+BEGIN
+SELECT linnNimi, IIF (rahvaArv < @piir, 'väike linn', 'suur linn') as Hinnang
+FROM linn;
+
+END;
+
+DROP PROCEDURE rahvaHinnang;
+
+EXEC rahvaHinnang 2000;
+
+--Agregaat funktsioonid: sum(), AVG(), MIN(), MAX(), COUNT()
+
+CREATE PROCEDURE kokkuRahvaarv
+
+AS
+BEGIN
+
+SELECT SUM(rahvaArv) AS 'kokku rahvaArv', AVG(rahvaArv) AS 'keskmine rahvaArv',
+MIN(rahvaArv) AS 'minimum rahvaArv', MAX(rahvaArv) AS 'maksimum rahvaArv', COUNT(*) AS 'linnade arv'
+FROM linn;
+
+END;
+
+DROP PROCEDURE kokkuRahvaarv;
+
+EXEC kokkuRahvaarv;
 
 
 
