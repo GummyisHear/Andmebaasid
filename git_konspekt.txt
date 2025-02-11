@@ -1,0 +1,4 @@
+Git CMD
+
+branch - ветка
+repository - репозиторий
