@@ -193,7 +193,9 @@ EXEC(@sqltegevus);
 END;
 END;
 
---Kutsun tabeli muutmine protseduur
+--Lisan uus veerg 'test' 'int' andmetüüpiga tabelis 'retsept'
+--Muudan seda veergu andmetüüp 'varchar(30)'
+--Kustutan seda veerg
 EXEC muudaTabel 'retsept', 'test', 'add', 'int';
 EXEC muudaTabel 'retsept', 'test', 'alter', 'varchar(30)'
 EXEC muudaTabel 'retsept', 'test', 'drop'
