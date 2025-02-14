@@ -122,6 +122,7 @@ SELECT * FROM retsept;
 SELECT * FROM tehtud;
 SELECT * FROM koostis;
 
+--Protseduur mis lisab uus retsept
 CREATE PROCEDURE lisaRetsept
 @nimi varchar(100),
 @kirjeldus varchar(200),
@@ -137,6 +138,7 @@ SELECT * FROM retsept;
 
 END;
 
+--Protseduur mis lisab uue väli 'tehtud' tabelisse
 CREATE PROCEDURE lisaTehtud
 @retsept int
 AS
@@ -148,6 +150,7 @@ SELECT * FROM tehtud;
 
 END;
 
+--Protseduur mis lisab uue väli 'koostis' tabelisse
 CREATE PROCEDURE lisaKoostis
 @retsept int,
 @toiduaine int,
@@ -162,10 +165,12 @@ SELECT * FROM koostis;
 
 END;
 
+--Kutsun kõik protseduurid
 EXEC lisaRetsept 'TestRetsept', 'Väga magus', 'Osta poodist', 2, 3;
 EXEC lisaTehtud 6;
 EXEC lisaKoostis 6, 4, 100, 9;
 
+--Protseduur mis saab muutama tabelid nime järgi, saab lisada veergid, kustuda veergid ja muudama andmetüüp veergis
 CREATE PROCEDURE muudaTabel
 @table varchar(30),
 @veerg varchar(30),
@@ -188,9 +193,11 @@ EXEC(@sqltegevus);
 END;
 END;
 
+--Kutsun tabeli muutmine protseduur
 EXEC muudaTabel 'retsept', 'test', 'add', 'int';
 EXEC muudaTabel 'retsept', 'test', 'alter', 'varchar(30)'
 EXEC muudaTabel 'retsept', 'test', 'drop'
 
+--Näidan kõik retseptid ja nende autori nimi
 SELECT concat(kasutaja.eesnimi, ' ', kasutaja.perenimi) Nimi, retsept.retsepti_nimi Retsept FROM kasutaja, retsept
 WHERE kasutaja.kasutaja_id = retsept.kasutaja_id
