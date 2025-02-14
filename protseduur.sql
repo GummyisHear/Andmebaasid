@@ -203,3 +203,25 @@ EXEC muudaTabel 'retsept', 'test', 'drop'
 --Näidan kõik retseptid ja nende autori nimi
 SELECT concat(kasutaja.eesnimi, ' ', kasutaja.perenimi) Nimi, retsept.retsepti_nimi Retsept FROM kasutaja, retsept
 WHERE kasutaja.kasutaja_id = retsept.kasutaja_id
+
+-- Uus tabel
+CREATE TABLE arvustused(
+arvustus_id int primary key identity(1,1),
+kasutaja_id int,
+retsept_id int,
+hinnang int,
+kommentaar varchar(300),
+kuupaev date,
+
+foreign key (kasutaja_id) references kasutaja(kasutaja_id),
+foreign key (retsept_id) references retsept(retsept_id)
+);
+
+INSERT INTO arvustused(kasutaja_id, retsept_id, hinnang, kommentaar, kuupaev) VALUES
+(2, 3, 4, 'Love it', GETDATE()),
+(3, 3, 4, 'Love it', GETDATE()),
+(4, 4, 1, 'Blud that is my recipe', GETDATE()),
+(1, 5, 4, 'Woah', GETDATE()),
+(2, 7, 1, 'Hate it', GETDATE());
+
+SELECT * FROM arvustused
