@@ -121,3 +121,107 @@ INSERT INTO koostis(retsept_retsept_id, toiduaine_id, kogus, yhik_id) VALUES
 SELECT * FROM retsept;
 SELECT * FROM tehtud;
 SELECT * FROM koostis;
+
+--Protseduur mis lisab uus retsept
+CREATE PROCEDURE lisaRetsept
+@nimi varchar(100),
+@kirjeldus varchar(200),
+@juhend varchar(500),
+@kasutaja int,
+@kategooria int
+AS
+BEGIN
+
+INSERT INTO retsept(retsepti_nimi, kirjeldus, juhend, sisestatud_kp, kasutaja_id, kategooria_id) VALUES
+(@nimi, @kirjeldus, @juhend, GETDATE(), @kasutaja, @kategooria);
+SELECT * FROM retsept;
+
+END;
+
+--Protseduur mis lisab uue väli 'tehtud' tabelisse
+CREATE PROCEDURE lisaTehtud
+@retsept int
+AS
+BEGIN
+
+INSERT INTO tehtud(tehtud_kp, retsept_id) VALUES
+(GETDATE(), @retsept);
+SELECT * FROM tehtud;
+
+END;
+
+--Protseduur mis lisab uue väli 'koostis' tabelisse
+CREATE PROCEDURE lisaKoostis
+@retsept int,
+@toiduaine int,
+@kogus int,
+@yhik int
+AS
+BEGIN
+
+INSERT INTO koostis(retsept_retsept_id, toiduaine_id, kogus, yhik_id) VALUES
+(@retsept, @toiduaine, @kogus, @yhik);
+SELECT * FROM koostis;
+
+END;
+
+--Kutsun kõik protseduurid
+EXEC lisaRetsept 'TestRetsept', 'Väga magus', 'Osta poodist', 2, 3;
+EXEC lisaTehtud 6;
+EXEC lisaKoostis 6, 4, 100, 9;
+
+--Protseduur mis saab muutama tabelid nime järgi, saab lisada veergid, kustuda veergid ja muudama andmetüüp veergis
+CREATE PROCEDURE muudaTabel
+@table varchar(30),
+@veerg varchar(30),
+@tegevus varchar(20),
+@tyyp varchar(20) = null
+AS
+BEGIN
+
+DECLARE @sqltegevus AS varchar(max);
+SET @sqltegevus = case
+when @tegevus = 'add' then concat('ALTER TABLE ', @table, ' ADD ', @veerg, ' ', @tyyp)
+when @tegevus = 'drop' then concat('ALTER TABLE ', @table, ' DROP COLUMN ', @veerg)
+when @tegevus = 'alter' then concat('ALTER TABLE ', @table, ' ALTER COLUMN ', @veerg, ' ', @tyyp)
+END;
+
+print @sqltegevus;
+
+BEGIN
+EXEC(@sqltegevus);
+END;
+END;
+
+--Lisan uus veerg 'test' 'int' andmetüüpiga tabelis 'retsept'
+--Muudan seda veergu andmetüüp 'varchar(30)'
+--Kustutan seda veerg
+EXEC muudaTabel 'retsept', 'test', 'add', 'int';
+EXEC muudaTabel 'retsept', 'test', 'alter', 'varchar(30)'
+EXEC muudaTabel 'retsept', 'test', 'drop'
+
+--Näidan kõik retseptid ja nende autori nimi
+SELECT concat(kasutaja.eesnimi, ' ', kasutaja.perenimi) Nimi, retsept.retsepti_nimi Retsept FROM kasutaja, retsept
+WHERE kasutaja.kasutaja_id = retsept.kasutaja_id
+
+-- Uus tabel
+CREATE TABLE arvustused(
+arvustus_id int primary key identity(1,1),
+kasutaja_id int,
+retsept_id int,
+hinnang int,
+kommentaar varchar(300),
+kuupaev date,
+
+foreign key (kasutaja_id) references kasutaja(kasutaja_id),
+foreign key (retsept_id) references retsept(retsept_id)
+);
+
+INSERT INTO arvustused(kasutaja_id, retsept_id, hinnang, kommentaar, kuupaev) VALUES
+(2, 3, 4, 'Love it', GETDATE()),
+(3, 3, 4, 'Love it', GETDATE()),
+(4, 4, 1, 'Blud that is my recipe', GETDATE()),
+(1, 5, 4, 'Woah', GETDATE()),
+(2, 7, 1, 'Hate it', GETDATE());
+
+SELECT * FROM arvustused
