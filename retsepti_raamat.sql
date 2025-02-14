@@ -225,3 +225,34 @@ INSERT INTO arvustused(kasutaja_id, retsept_id, hinnang, kommentaar, kuupaev) VA
 (2, 7, 1, 'Hate it', GETDATE());
 
 SELECT * FROM arvustused
+
+--Protseduurid minu tabelisse
+CREATE PROCEDURE lisaArvustus
+@kasutaja int, 
+@retsept int, 
+@hinnang int, 
+@kommentaar varchar(300)
+AS
+BEGIN
+
+INSERT INTO arvustused(kasutaja_id, retsept_id, hinnang, kommentaar, kuupaev) VALUES
+(@kasutaja, @retsept, @hinnang, @kommentaar, GETDATE());
+SELECT * FROM arvustused;
+
+END;
+
+EXEC lisaArvustus 1, 5, 5, 'hi'
+
+
+CREATE PROCEDURE kustutaArvustus
+@arvustusId int
+AS
+BEGIN
+
+SELECT * FROM arvustused
+DELETE FROM arvustused WHERE arvustus_id = @arvustusId
+SELECT * FROM arvustused
+
+END;
+
+EXEC kustutaArvustus 6
