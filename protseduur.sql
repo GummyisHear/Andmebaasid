@@ -1,127 +1,184 @@
-(localdb)mssqllocaldb
+CREATE DATABASE retseptiRaamatPoldsaar;
+USE retseptiRaamatPoldsaar;
 
---SQL salvestatud protseduur - funktsioon, mis käivitab serveris mitu SQL tegevust järjest
---Kasutame SQL Server 
-
-CREATE DATABASE protseduurPoldsaar;
-USE protseduurPoldsaar;
-
-CREATE TABLE linn(
-linnId int PRIMARY KEY IDENTITY(1,1),
-linnNimi varchar(30),
-rahvaArv int
+CREATE TABLE kasutaja(
+kasutaja_id int primary key identity(1,1),
+eesnimi varchar(50),
+perenimi varchar(50),
+email varchar(150)
 );
 
-SELECT * FROM linn;
+INSERT INTO kasutaja(eesnimi, perenimi, email) VALUES
+('vadim', 'penkin', 'vadim.penkin@gmail.com'),
+('andrei', 'svarshik', 'andrei2004@gmail.com'),
+('mike', 'tyson', 'diddy@gmail.com'),
+('nikita', 'gruzovik', 'vadimdestroyer@gmail.com'),
+('anton', 'krutoi', 'antonandon@hotmail.com');
 
-INSERT INTO linn(linnNimi, rahvaArv) VALUES
-('Tallinn', 437980),
-('Pärnu', 40228),
-('Narva', 53626);
-
---Protseduuri loomine
---protseduur, mis lisab uus linn ja kohe näitab tabelis
-
-CREATE PROCEDURE lisaLinn
-@lnimi varchar(30),
-@rArv int
-AS
-BEGIN
-
-INSERT INTO linn(linnNimi, rahvaArv) VALUES
-(@lnimi, @rArv);
-SELECT * FROM linn;
-
-END;
-
---protseduuri kutse
-EXEC lisaLinn @lnimi='Tartu', @rArv=93000;
-EXEC lisaLinn 'Tartu2', 93000;
-
---protseduur, mis kustututab linn id järgi
-
-CREATE PROCEDURE kustutaLinn
-@lId int
-AS
-BEGIN
-SELECT * FROM linn;
-DELETE FROM linn WHERE linnId=@lId;
-SELECT * FROM linn;
-END;
-
-EXEC lisaLinn 'Tartu3333', 93000;
-EXEC kustutaLinn 6;
-
---protseduuri kustutamine
-DROP PROCEDURE kustutaLinn;
-
-EXEC lisaLinn 'Tartu3333', 93000;
-EXEC lisaLinn 'Viljandi', 1;
-EXEC lisaLinn 'Saaremaa', 9;
-
---Protseduur, mis otsib linn esimese tähte järgi
-
-CREATE PROCEDURE linnaOtsing
-@taht char(1)
-AS
-BEGIN
-
-SELECT * FROM linn 
-WHERE linnNimi LIKE @taht + '%';
---% - kõik teised tähed
-
-END;
-
---kutse
-EXEC linnaOtsing 'T';
-EXEC linnaOtsing 'S';
-EXEC linnaOtsing 'P';
-
-
---------------------------------------------------------------------------------------------------------------
---Kasutame XAMPP / localhost
-
-CREATE DATABASE protseduurPoldsaar;
-
-CREATE TABLE linn(
-linnId int primary key AUTO_INCREMENT,
-linnNimi varchar(30),
-rahvaArv int
+CREATE TABLE kategooria(
+kategooria_id int primary key identity(1,1),
+kategooria_nimi varchar(50)
 );
 
-INSERT INTO linn(linnNimi, rahvaArv) VALUES
-('Tallinn', 437980),
-('Pärnu', 40228),
-('Narva', 53626);
+INSERT INTO kategooria(kategooria_nimi) VALUES
+('Supid'),
+('Road'),
+('Magusad'),
+('Joogid'),
+('Puuviljad');
 
+CREATE TABLE toiduaine(
+toiduaine_id int primary key identity(1,1),
+toiduaine_nimi varchar(100)
+);
 
+INSERT INTO toiduaine(toiduaine_nimi) VALUES
+('Tomatipasta'),
+('Pepperoni'),
+('Jahu'),
+('Juust'),
+('Tainas');
 
---kutse
-CALL lisaLinn('Tartu', 25095);
+CREATE TABLE yhik(
+yhik_id int primary key identity(1,1),
+yhik_nimi varchar(100)
+);
 
+INSERT INTO yhik(yhik_nimi) VALUES
+('ml'),
+('tl'),
+('sl'),
+('g'),
+('kg'),
+('tk');
 
----------------------------------------------------------------------------------------------------------------
---07.02
+CREATE TABLE retsept(
+retsept_id int primary key identity(1,1),
+retsepti_nimi varchar(100),
+kirjeldus varchar(200),
+juhend varchar(500),
+sisestatud_kp date,
+kasutaja_id int,
+foreign key (kasutaja_id) references kasutaja(kasutaja_id),
+kategooria_id int,
+foreign key (kategooria_id) references kategooria(kategooria_id)
+);
 
--- uue veeru lisamine
-ALTER TABLE linn ADD test int;
+INSERT INTO retsept(retsepti_nimi, kirjeldus, juhend, sisestatud_kp, kasutaja_id) VALUES
+('Pasta Carbonara', 
+'Klassikaline Itaalia pastaroog, mis on valmistatud munade, juustu, pancetta ja pipraga.',
+'Keeda pasta vastavalt pakendi juhistele. Küpseta pancettat eraldi pannil krõbedaks. Vahusta munad riivitud parmesani ja musta pipraga. Nõruta pasta ja kombineeri pancettaga. Lisa aeglaselt munasegu ja sega kreemja kastme saamiseks. Serveeri peale lisa juustu ja pipraga.',
+'2025-02-14',
+1);
 
-SELECT * FROM linn;
+INSERT INTO retsept(retsepti_nimi, kirjeldus, juhend, sisestatud_kp, kasutaja_id) VALUES
+('Šokolaadikook', 
+'Rikkalik ja niiske šokolaadikook ühtlase šokolaadijäätisega.',
+'Kuumuta ahi 180°C-ni. Sega omavahel jahu, kakaopulber, suhkur, sooda ja sool. Sega eraldi kausis munad, piim, taimeõli ja vanill. Lisa märjad koostisosad vähehaaval kuivadele koostisosadele ja sega ühtlaseks massiks. Vala tainas võiga määritud koogivormidesse ja küpseta 30 minutit. Lase jahtuda, seejärel määri šokolaadiglasuuriga.',
+'2025-02-14',
+1);
 
--- veeru kustutamine
-ALTER TABLE linn DROP COLUMN test;
+INSERT INTO retsept(retsepti_nimi, sisestatud_kp, kasutaja_id, kategooria_id) VALUES
+('Pizza', '2020-01-01', 3, 2),
+('Borš', '2024-01-01', 1, 1),
+('Kartulipüree kotletiga', '1821-05-05', 3, 2);
 
-CREATE PROCEDURE veeruLisaKustuta
-@valik varchar(20),
-@veerunimi varchar(20),
-@tyyp varchar(10) = null
+CREATE TABLE tehtud(
+tehtud_id int primary key identity(1,1),
+tehtud_kp date,
+retsept_id int,
+foreign key (retsept_id) references retsept(retsept_id)
+);
+
+INSERT INTO tehtud(tehtud_kp, retsept_id) VALUES
+('2023-02-07', 3),
+('2021-01-02', 4),
+('2024-12-31', 5),
+('2019-07-08', 6),
+('2023-02-16', 7);
+
+CREATE TABLE koostis(
+koostis_id int primary key identity(1,1),
+kogus int,
+retsept_retsept_id int,
+foreign key (retsept_retsept_id) references retsept(retsept_id),
+toiduaine_id int,
+foreign key (toiduaine_id) references toiduaine(toiduaine_id),
+yhik_id int,
+foreign key (yhik_id) references yhik(yhik_id)
+);
+
+INSERT INTO koostis(retsept_retsept_id, toiduaine_id, kogus, yhik_id) VALUES
+(3, 1, 4, 8),
+(3, 2, 15, 11),
+(3, 4, 200, 9),
+(3, 5, 300, 9);
+
+--SELECT * FROM kasutaja;
+--SELECT * FROM kategooria;
+--SELECT * FROM toiduaine;
+--SELECT * FROM yhik;
+SELECT * FROM retsept;
+SELECT * FROM tehtud;
+SELECT * FROM koostis;
+
+CREATE PROCEDURE lisaRetsept
+@nimi varchar(100),
+@kirjeldus varchar(200),
+@juhend varchar(500),
+@kasutaja int,
+@kategooria int
+AS
+BEGIN
+
+INSERT INTO retsept(retsepti_nimi, kirjeldus, juhend, sisestatud_kp, kasutaja_id, kategooria_id) VALUES
+(@nimi, @kirjeldus, @juhend, GETDATE(), @kasutaja, @kategooria);
+SELECT * FROM retsept;
+
+END;
+
+CREATE PROCEDURE lisaTehtud
+@retsept int
+AS
+BEGIN
+
+INSERT INTO tehtud(tehtud_kp, retsept_id) VALUES
+(GETDATE(), @retsept);
+SELECT * FROM tehtud;
+
+END;
+
+CREATE PROCEDURE lisaKoostis
+@retsept int,
+@toiduaine int,
+@kogus int,
+@yhik int
+AS
+BEGIN
+
+INSERT INTO koostis(retsept_retsept_id, toiduaine_id, kogus, yhik_id) VALUES
+(@retsept, @toiduaine, @kogus, @yhik);
+SELECT * FROM koostis;
+
+END;
+
+EXEC lisaRetsept 'TestRetsept', 'Väga magus', 'Osta poodist', 2, 3;
+EXEC lisaTehtud 6;
+EXEC lisaKoostis 6, 4, 100, 9;
+
+CREATE PROCEDURE muudaTabel
+@table varchar(30),
+@veerg varchar(30),
+@tegevus varchar(20),
+@tyyp varchar(20) = null
 AS
 BEGIN
 
 DECLARE @sqltegevus AS varchar(max);
 SET @sqltegevus = case
-when @valik = 'add' then concat('ALTER TABLE linn ADD ', @veerunimi, ' ', @tyyp)
-when @valik = 'drop' then concat('ALTER TABLE linn DROP COLUMN ', @veerunimi)
+when @tegevus = 'add' then concat('ALTER TABLE ', @table, ' ADD ', @veerg, ' ', @tyyp)
+when @tegevus = 'drop' then concat('ALTER TABLE ', @table, ' DROP COLUMN ', @veerg)
+when @tegevus = 'alter' then concat('ALTER TABLE ', @table, ' ALTER COLUMN ', @veerg, ' ', @tyyp)
 END;
 
 print @sqltegevus;
@@ -129,72 +186,11 @@ print @sqltegevus;
 BEGIN
 EXEC(@sqltegevus);
 END;
-
 END;
 
---kutse
-EXEC veeruLisaKustuta @valik='add', @veerunimi='test3', @tyyp='int';
-EXEC veeruLisaKustuta @valik='drop', @veerunimi='test3';
-SELECT * FROM linn;
+EXEC muudaTabel 'retsept', 'test', 'add', 'int';
+EXEC muudaTabel 'retsept', 'test', 'alter', 'varchar(30)'
+EXEC muudaTabel 'retsept', 'test', 'drop'
 
--- protseduur 2
-CREATE PROCEDURE veeruLisaKustutaTabelis
-@valik varchar(20),
-@tabelinimi varchar(20),
-@veerunimi varchar(20),
-@tyyp varchar(10) = null
-AS
-BEGIN
-
-DECLARE @sqltegevus AS varchar(max);
-SET @sqltegevus = case
-when @valik = 'add' then concat('ALTER TABLE ', @tabelinimi, ' ADD ', @veerunimi, ' ', @tyyp)
-when @valik = 'drop' then concat('ALTER TABLE ', @tabelinimi, ' DROP COLUMN ', @veerunimi)
-END;
-
-print @sqltegevus;
-
-BEGIN
-EXEC(@sqltegevus);
-END;
-
-END;
-
---kutse
-EXEC veeruLisaKustutaTabelis @valik='add', @tabelinimi='linn', @veerunimi='test3', @tyyp='int';
-EXEC veeruLisaKustutaTabelis @valik='drop', @tabelinimi='linn', @veerunimi='test3';
-SELECT * FROM linn;
-
---protseduur tingimusega
-CREATE PROCEDURE rahvaHinnang
-@piir int
-AS
-BEGIN
-SELECT linnNimi, IIF (rahvaArv < @piir, 'väike linn', 'suur linn') as Hinnang
-FROM linn;
-
-END;
-
-DROP PROCEDURE rahvaHinnang;
-
-EXEC rahvaHinnang 2000;
-
---Agregaat funktsioonid: sum(), AVG(), MIN(), MAX(), COUNT()
-
-CREATE PROCEDURE kokkuRahvaarv
-
-AS
-BEGIN
-
-SELECT SUM(rahvaArv) AS 'kokku rahvaArv', AVG(rahvaArv) AS 'keskmine rahvaArv',
-MIN(rahvaArv) AS 'minimum rahvaArv', MAX(rahvaArv) AS 'maksimum rahvaArv', COUNT(*) AS 'linnade arv'
-FROM linn;
-
-END;
-
-DROP PROCEDURE kokkuRahvaarv;
-
-EXEC kokkuRahvaarv;
-
-
-
+SELECT concat(kasutaja.eesnimi, ' ', kasutaja.perenimi) Nimi, retsept.retsepti_nimi Retsept FROM kasutaja, retsept
+WHERE kasutaja.kasutaja_id = retsept.kasutaja_id
