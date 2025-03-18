@@ -1,0 +1,88 @@
+(1)
+select * from city where cityName like "H%" and population > 500000 or continent like "Asia";
+
+(2)
+select AVG(population) as 'Keskmine Rahvaarv', MAX(population) as 'Maksimaalne Rahvaarv' from city;
+
+(3)
+select * from city where cityName like "Amsterdam";
+
+update city
+set population = population * 1.1
+where cityName like "Amsterdam";
+
+select * from city where cityName like "Amsterdam";
+
+(4)
+alter table city
+add Area decimal;
+
+update city
+set Area = 0;
+
+
+
+
+------------------------------------------------------------------------------------------
+
+(13)
+select Name, SurfaceArea from country order by SurfaceArea limit 1;
+
+(14)
+select Name, Population from country order by Population desc limit 10;
+
+(15)
+select Name, Population, Continent from country 
+where Continent like 'Europe' order by Population desc limit 10;
+
+
+(17)
+select * from country where Continent not like 'Antarctica'
+
+(18)
+SELECT COUNT(*) as 'Kokku riigid', SUM(Population) as 'Summa rahvaarvudes' 
+FROM country where HeadOfState like 'Elisabeth II'
+
+(19)
+select count(*) 'Kokku riigid', 
+MAX(Population) as 'Maksimaalne rahvaarv', 
+MIN(Population) as 'Minimaalne rahvaarv' 
+from country where Region like 'Polynesia'
+
+(20)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
