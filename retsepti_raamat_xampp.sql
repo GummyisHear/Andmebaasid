@@ -126,8 +126,8 @@ foreign key (retsept_id) references retsept(retsept_id)
 );
 
 INSERT INTO arvustused(kasutaja_id, retsept_id, hinnang, kommentaar, kuupaev) VALUES
-(2, 3, 4, 'Love it', '25-03-2025'),
-(3, 3, 4, 'Love it', '25-03-2025'),
-(4, 4, 1, 'Blud that is my recipe', '25-03-2025'),
-(1, 2, 4, 'Woah', '25-03-2025'),
-(2, 1, 1, 'Hate it', '25-03-2025');
+(2, 3, 4, 'Love it', '2025-03-25'),
+(3, 3, 4, 'Love it', '2025-03-25'),
+(4, 4, 1, 'Blud that is my recipe', '2025-03-25'),
+(1, 2, 4, 'Woah', '2025-03-25'),
+(2, 1, 1, 'Hate it', '2025-03-25');
