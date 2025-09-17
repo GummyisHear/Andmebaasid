@@ -60,4 +60,58 @@ group by tk.nimetus;
 
 select * from kategooriaInfo;
 
---loo vaade mis 
+--loo vaade mis arvutab toode käibemaksu (24%) ja iga toode hind käibemaksuga
+create view toode_kaibemaksuga as
+select toodenimetus, cast((hind * 1.24) as decimal(5,2)) as 'käibemaksuga hind' 
+from toode;
+
+--protseduur mille abil saad uut tooded lisada tabelisse
+create procedure toodesse_panna
+@toodeNimetus varchar(200),
+@hind decimal(5,2),
+@toodekategooriaId int,
+@aktiivne bit
+as begin
+insert into toode(toodenimetus, hind, toodekategooriaId, aktiivne)
+values (@toodeNimetus, @hind, @toodekategooriaId, @aktiivne);
+select * from toode;
+end
+
+exec toodesse_panna 'pepsi', 1.59, 2, 1;
+
+--protseduur, mis uuendab toote hind toode id järgi
+create procedure uuendaHind
+@toodeId int,
+@uusHind decimal(5,2)
+as begin
+update toode set hind = @uusHind
+where toodeId = @toodeId;
+select * from toode;
+end;
+
+exec uuendaHind 7, 1.99;
+
+--protseduur, mis kustutab toode ID järgi
+create procedure kustutaToode
+@toodeId int
+as begin
+delete from toode where toodeId = @toodeId;
+select * from toode;
+end;
+
+exec kustutaToode 2;
+
+
+create procedure leiaToode
+@kategooria varchar(30)
+as begin
+select tk.nimetus, toodenimetus, hind 
+from toode t 
+inner join toodekategooria tk on t.toodekategooriaId = tk.toodekategooriaId
+where tk.nimetus like @kategooria;
+end;
+
+drop procedure leiaToode
+
+exec leiaToode 'joogid';
+select * from toode;
